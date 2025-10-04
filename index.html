@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Xepico - Yetim Bolalarga Yordam</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg-light: #ffffff;
+        --bg-dark: #000000;
+        --text-light: #000000;
+        --text-dark: #ffffff;
+        --neon-green: #00ff41;
+        --neon-blue: #00d4ff;
+        --neon-purple: #b400ff;
+        --card-light: #f8f9fa;
+        --card-dark: #0a0a0a;
+        --button-blue: #0084ff;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: var(--bg-light);
+        color: var(--text-light);
+        transition: background 0.5s ease, color 0.5s ease;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      body.dark-mode {
+        background: var(--bg-dark);
+        color: var(--text-dark);
+      }
+
+      /* Animated background particles */
+      .particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.3;
+      }
+
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: var(--neon-green);
+        border-radius: 50%;
+        animation: float 20s infinite;
+        box-shadow: 0 0 10px var(--neon-green);
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0) translateX(0);
+        }
+        25% {
+          transform: translateY(-100px) translateX(50px);
+        }
+        50% {
+          transform: translateY(-200px) translateX(-50px);
+        }
+        75% {
+          transform: translateY(-100px) translateX(100px);
+        }
+      }
+
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: linear-gradient(
+          135deg,
+          var(--button-blue),
+          var(--neon-purple)
+        );
+        border: 2px solid var(--neon-blue);
+        padding: 15px 30px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        color: white;
+        font-size: 1.1em;
+        box-shadow: 0 0 30px var(--neon-blue), 0 0 60px rgba(0, 212, 255, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .theme-toggle:hover {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 0 50px var(--neon-blue), 0 0 100px rgba(0, 212, 255, 0.5);
+      }
+
+      header {
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        padding: 100px 20px;
+        text-align: center;
+        border: 3px solid var(--neon-green);
+        box-shadow: 0 0 50px var(--neon-green),
+          inset 0 0 30px rgba(0, 255, 65, 0.1);
+        position: relative;
+        z-index: 1;
+        overflow: hidden;
+      }
+
+      body.dark-mode header {
+        background: linear-gradient(
+          135deg,
+          #000000 0%,
+          #0a0a0a 50%,
+          #1a1a1a 100%
+        );
+        box-shadow: 0 0 50px var(--neon-blue),
+          inset 0 0 30px rgba(0, 212, 255, 0.1);
+        border-color: var(--neon-blue);
+      }
+
+      header::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(0, 255, 65, 0.1) 0%,
+          transparent 70%
+        );
+        animation: pulse 8s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scale(1.5);
+          opacity: 0.8;
+        }
+      }
+
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 2;
+      }
+
+      .header-image {
+        flex: 1;
+        min-width: 300px;
+        max-width: 500px;
+        animation: fadeInLeft 1s ease;
+      }
+
+      @keyframes fadeInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes fadeInRight {
+        from {
+          opacity: 0;
+          transform: translateX(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .header-image img {
+        width: 100%;
+        border-radius: 25px;
+        border: 4px solid var(--neon-green);
+        box-shadow: 0 0 60px var(--neon-green), 0 10px 40px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      body.dark-mode .header-image img {
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 60px var(--neon-blue),
+          0 10px 40px rgba(0, 212, 255, 0.3);
+      }
+
+      .header-image img:hover {
+        transform: scale(1.05) rotate(2deg);
+        box-shadow: 0 0 80px var(--neon-green), 0 20px 60px rgba(0, 0, 0, 0.6);
+      }
+
+      .header-text {
+        flex: 1;
+        min-width: 300px;
+        text-align: left;
+        animation: fadeInRight 1s ease;
+      }
+
+      .header-text h1 {
+        font-size: 4em;
+        background: linear-gradient(
+          135deg,
+          var(--neon-green),
+          var(--neon-blue)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 30px;
+        text-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+        animation: glow 2s infinite alternate;
+      }
+
+      @keyframes glow {
+        from {
+          filter: drop-shadow(0 0 10px var(--neon-green));
+        }
+        to {
+          filter: drop-shadow(0 0 30px var(--neon-blue));
+        }
+      }
+
+      .header-text p {
+        font-size: 1.3em;
+        color: #e0e0e0;
+        line-height: 1.9;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      nav {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 15px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        box-shadow: none; /* remove visual separator */
+        border-bottom: none;
+        transition: all 0.3s ease;
+      }
+
+      body.dark-mode nav {
+        background: rgba(10, 10, 10, 0.95);
+        box-shadow: none;
+        border-bottom: none;
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .nav-logo {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: var(--neon-green);
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      body.dark-mode .nav-logo {
+        color: var(--neon-blue);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      nav a {
+        color: #333;
+        text-decoration: none;
+        padding: 8px 16px;
+        font-size: 0.95em;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        text-shadow: none;
+      }
+
+      body.dark-mode nav a {
+        color: #e0e0e0;
+      }
+
+      nav a:hover {
+        background: rgba(0, 255, 65, 0.1);
+        transform: translateY(-2px);
+        box-shadow: none;
+      }
+
+      body.dark-mode nav a:hover {
+        background: rgba(0, 212, 255, 0.1);
+      }
+
+      .slider-container {
+        max-width: 1200px;
+        margin: 80px auto;
+        padding: 0 20px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .slider {
+        display: flex;
+        transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+      }
+
+      .slide {
+        min-width: 100%;
+        padding: 20px;
+      }
+
+      .slide img {
+        width: 100%;
+        max-height: 600px;
+        object-fit: cover;
+        border-radius: 30px;
+        border: 4px solid var(--neon-green);
+        box-shadow: 0 0 60px var(--neon-green), 0 20px 50px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+      }
+
+      body.dark-mode .slide img {
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 60px var(--neon-blue),
+          0 20px 50px rgba(0, 212, 255, 0.3);
+      }
+
+      .slider-controls {
+        text-align: center;
+        margin-top: 30px;
+      }
+
+      .slider-controls button {
+        background: linear-gradient(135deg, var(--button-blue), #0066cc);
+        border: 2px solid var(--neon-blue);
+        padding: 15px 35px;
+        margin: 0 15px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        color: white;
+        font-size: 1.1em;
+        box-shadow: 0 0 30px var(--neon-blue), 0 5px 20px rgba(0, 132, 255, 0.4);
+        transition: all 0.3s ease;
+      }
+
+      .slider-controls button:hover {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 0 50px var(--neon-blue),
+          0 10px 30px rgba(0, 132, 255, 0.6);
+      }
+
+      .info-section {
+        max-width: 1200px;
+        margin: 80px auto;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 50px;
+        z-index: 1;
+        position: relative;
+      }
+
+      .info-card {
+        background: var(--card-light);
+        padding: 40px;
+        border-radius: 30px;
+        border: 3px solid var(--neon-green);
+        box-shadow: 0 0 40px var(--neon-green), 0 10px 40px rgba(0, 0, 0, 0.2);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      body.dark-mode .info-card {
+        background: var(--card-dark);
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 40px var(--neon-blue),
+          0 10px 40px rgba(0, 212, 255, 0.2);
+      }
+
+      .info-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(0, 255, 65, 0.1) 0%,
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+
+      body.dark-mode .info-card::before {
+        background: radial-gradient(
+          circle,
+          rgba(0, 212, 255, 0.1) 0%,
+          transparent 70%
+        );
+      }
+
+      .info-card:hover::before {
+        opacity: 1;
+      }
+
+      .info-card:hover {
+        transform: translateY(-15px) scale(1.02);
+        box-shadow: 0 0 70px var(--neon-green), 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      body.dark-mode .info-card:hover {
+        box-shadow: 0 0 70px var(--neon-blue),
+          0 20px 60px rgba(0, 212, 255, 0.3);
+      }
+
+      .info-card img {
+        width: 100%;
+        border-radius: 20px;
+        margin-bottom: 25px;
+        border: 3px solid var(--neon-green);
+        box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      body.dark-mode .info-card img {
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+      }
+
+      .info-card img:hover {
+        transform: scale(1.05);
+      }
+
+      .info-card h3 {
+        color: var(--neon-green);
+        margin-bottom: 20px;
+        font-size: 1.8em;
+        text-shadow: 0 0 15px var(--neon-green);
+      }
+
+      body.dark-mode .info-card h3 {
+        color: var(--neon-blue);
+        text-shadow: 0 0 15px var(--neon-blue);
+      }
+
+      .info-card p {
+        font-size: 1.1em;
+        line-height: 1.8;
+      }
+
+      footer {
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        padding: 60px 20px;
+        text-align: center;
+        border-top: 3px solid var(--neon-green);
+        box-shadow: 0 0 50px var(--neon-green);
+        margin-top: 80px;
+        position: relative;
+        z-index: 1;
+      }
+
+      body.dark-mode footer {
+        background: linear-gradient(
+          135deg,
+          #000000 0%,
+          #0a0a0a 50%,
+          #1a1a1a 100%
+        );
+        border-top-color: var(--neon-blue);
+        box-shadow: 0 0 50px var(--neon-blue);
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 40px;
+        flex-wrap: wrap;
+      }
+
+      .footer-links a {
+        color: white;
+        text-decoration: none;
+        padding: 15px 40px;
+        background: linear-gradient(135deg, var(--button-blue), #0066cc);
+        border: 2px solid var(--neon-blue);
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 25px var(--neon-blue);
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+
+      .footer-links a:hover {
+        background: linear-gradient(135deg, #0099ff, var(--button-blue));
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 0 40px var(--neon-blue),
+          0 10px 30px rgba(0, 132, 255, 0.5);
+      }
+
+      .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        margin-top: 30px;
+      }
+
+      .social-links a {
+        color: white;
+        font-size: 1.3em;
+        text-decoration: none;
+        padding: 15px 30px;
+        border: 3px solid var(--neon-green);
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 25px var(--neon-green);
+        background: rgba(0, 255, 65, 0.1);
+        font-weight: bold;
+      }
+
+      body.dark-mode .social-links a {
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 25px var(--neon-blue);
+        background: rgba(0, 212, 255, 0.1);
+      }
+
+      .social-links a:hover {
+        background: var(--neon-green);
+        color: #000;
+        transform: scale(1.2) rotate(5deg);
+        box-shadow: 0 0 40px var(--neon-green);
+      }
+
+      body.dark-mode .social-links a:hover {
+        background: var(--neon-blue);
+      }
+
+      @media (max-width: 768px) {
+        .header-text h1 {
+          font-size: 2.5em;
+        }
+
+        nav a {
+          display: block;
+          margin: 10px 0;
+        }
+
+        .theme-toggle {
+          padding: 10px 20px;
+          font-size: 0.9em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="particles" id="particles"></div>
+
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">
+      🌙 Tun/Kun Rejimi
+    </button>
+
+    <nav>
+      <a href="xepico-coin.html">💎 Xepico Coin</a>
+      <a href="about.html">ℹ️ Sayt haqida</a>
+    </nav>
+
+    <header>
+      <div class="header-content">
+        <div class="header-image">
+          <img src="children.png" alt="Yetim bolalar" />
+        </div>
+        <div class="header-text">
+          <h1>XEPICO</h1>
+          <p>
+            🌟 Biz O'zbekiston yetim bolalarini qo'llab-quvvatlash va ularning
+            kelajagini yorug'lashtirish uchun ishlaydigan zamonaviy xayriya
+            tashkilotimiz. Har bir bolaning baxtli bolalik huquqi bor va biz bu
+            huquqni amalga oshirishga yordam beramiz.
+          </p>
+          <p style="margin-top: 20px">
+            💚 Bizning maqsadimiz - yetim bolalarga sifatli ta'lim, tibbiy
+            yordam, kiyim-kechak va boshqa zarur narsalarni taqdim etish orqali
+            ularning hayotini tubdan yaxshilash.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- nav moved above header and 'Ko'ngilli bo'ling' removed -->
+    <div class="slider-container">
+      <div class="slider" id="slider">
+        <div class="slide">
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2366bb6a;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2300ff41;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g1)' width='1200' height='600' rx='30'/%3E%3Ctext x='50%25' y='50%25' font-size='52' fill='white' text-anchor='middle' dominant-baseline='middle' font-weight='bold'%3E🌈 Bolalar baxtli bo\'lishi kerak%3C/text%3E%3C/svg%3E"
+            alt="Slide 1"
+          />
+        </div>
+        <div class="slide">
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Cdefs%3E%3ClinearGradient id='g2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2342a5f5;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%2300d4ff;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g2)' width='1200' height='600' rx='30'/%3E%3Ctext x='50%25' y='50%25' font-size='52' fill='white' text-anchor='middle' dominant-baseline='middle' font-weight='bold'%3E📚 Ta\'lim har bir bolaning huquqi%3C/text%3E%3C/svg%3E"
+            alt="Slide 2"
+          />
+        </div>
+        <div class="slide">
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='600'%3E%3Cdefs%3E%3ClinearGradient id='g3' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23b400ff;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23ff00ff;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g3)' width='1200' height='600' rx='30'/%3E%3Ctext x='50%25' y='50%25' font-size='52' fill='white' text-anchor='middle' dominant-baseline='middle' font-weight='bold'%3E🤝 Birgalikda kuchlirok%3C/text%3E%3C/svg%3E"
+            alt="Slide 3"
+          />
+        </div>
+      </div>
+      <div class="slider-controls">
+        <button onclick="prevSlide()">⬅ Oldingi</button>
+        <button onclick="nextSlide()">Keyingi ➡</button>
+      </div>
+    </div>
+
+    <!-- Slider controls script: provides prevSlide/nextSlide and autoplay -->
+    <script>
+      (function () {
+        const slider = document.getElementById("slider");
+        if (!slider) return;
+        const slides = Array.from(slider.querySelectorAll(".slide"));
+        let index = 0;
+        const total = slides.length || 1;
+        // ensure slider uses transform for movement
+        slider.style.transition = "transform 0.6s cubic-bezier(.65,0,.35,1)";
+
+        function goTo(i) {
+          if (i < 0) i = total - 1;
+          if (i >= total) i = 0;
+          index = i;
+          slider.style.transform = `translateX(-${index * 100}%)`;
+        }
+
+        window.prevSlide = function () {
+          goTo(index - 1);
+          restartAutoplay();
+        };
+
+        window.nextSlide = function () {
+          goTo(index + 1);
+          restartAutoplay();
+        };
+
+        // optional autoplay
+        let autoplayInterval = 6000;
+        let autoplayId = null;
+        function startAutoplay() {
+          if (autoplayId) return;
+          autoplayId = setInterval(() => goTo(index + 1), autoplayInterval);
+        }
+        function stopAutoplay() {
+          if (autoplayId) {
+            clearInterval(autoplayId);
+            autoplayId = null;
+          }
+        }
+        function restartAutoplay() {
+          stopAutoplay();
+          startAutoplay();
+        }
+
+        // initialize
+        // set slider width if needed (each .slide is 100% so flex handles it)
+        goTo(0);
+        startAutoplay();
+
+        // pause on hover
+        slider.addEventListener("mouseenter", stopAutoplay);
+        slider.addEventListener("mouseleave", startAutoplay);
+
+        // keyboard support
+        window.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowLeft") window.prevSlide();
+          if (e.key === "ArrowRight") window.nextSlide();
+        });
+      })();
+    </script>
+
+    <!-- Theme toggle script: saves preference in localStorage -->
+    <script>
+      (function () {
+        const btn = document.getElementById("themeBtn");
+        function setLabel(isDark) {
+          if (!btn) return;
+          btn.textContent = isDark ? "☀️ Kun rejimi" : "🌙 Tun rejimi";
+        }
+        function applyTheme(isDark) {
+          if (isDark) document.body.classList.add("dark-mode");
+          else document.body.classList.remove("dark-mode");
+          setLabel(isDark);
+        }
+        window.toggleTheme = function () {
+          const isDark = document.body.classList.toggle("dark-mode");
+          setLabel(isDark);
+          try {
+            localStorage.setItem("xepico-theme-dark", isDark ? "1" : "0");
+          } catch (e) {}
+        };
+        try {
+          const saved = localStorage.getItem("xepico-theme-dark");
+          if (saved === "1") applyTheme(true);
+          else if (saved === "0") applyTheme(false);
+          else if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+          )
+            applyTheme(true);
+          else applyTheme(false);
+        } catch (e) {
+          /* ignore */
+        }
+      })();
+    </script>
+
+    <div class="info-section">
+      <div class="info-card">
+        <img
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Cdefs%3E%3ClinearGradient id='card1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffa726;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23ff6f00;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23card1)' width='400' height='300' rx='20'/%3E%3Ctext x='50%25' y='40%25' font-size='60' text-anchor='middle'%3E📊%3C/text%3E%3Ctext x='50%25' y='60%25' font-size='28' fill='white' text-anchor='middle' font-weight='bold'%3EStatistika%3C/text%3E%3C/svg%3E"
+          alt="Statistika"
+        />
+        <h3>📊 O'zbekistonda yetim bolalar</h3>
+        <p>
+          O'zbekistonda 50,000 dan ortiq yetim va qarovsiz qolgan bolalar
+          mavjud. Ularning aksariyati bolalar uylarida yoki qarindoshlar
+          qaramog'ida o'smoqda. Bu bolalar davlat va xayriya tashkilotlari
+          tomonidan qo'llab-quvvatlanishga muhtoj.
+        </p>
+        <p style="margin-top: 15px">
+          💫 Biz har bir bolaning to'laqonli rivojlanishi uchun zarur bo'lgan
+          barcha imkoniyatlarni yaratishga intilamiz va ularning kelajagini
+          qurish uchun har tomonlama yordam beramiz.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <img
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Cdefs%3E%3ClinearGradient id='card2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2329b6f6;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%230084ff;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23card2)' width='400' height='300' rx='20'/%3E%3Ctext x='50%25' y='40%25' font-size='60' text-anchor='middle'%3E🎓%3C/text%3E%3Ctext x='50%25' y='60%25' font-size='28' fill='white' text-anchor='middle' font-weight='bold'%3ETa\'lim dasturi%3C/text%3E%3C/svg%3E"
+          alt="Ta'lim"
+        />
+        <h3>🎓 Ta'lim va rivojlanish</h3>
+        <p>
+          Bizning tashkilotimiz yetim bolalarga sifatli ta'lim olish
+          imkoniyatini beradi. Zamonaviy maktab jihozlari, darsliklar,
+          kompyuterlar va qo'shimcha ta'lim kurslari orqali biz bolalarning
+          bilim olishiga ko'maklashamiz.
+        </p>
+        <p style="margin-top: 15px">
+          ✨ Har yili 1000+ ta bolaga ta'lim yordami ko'rsatiladi. Sport
+          to'garaklari, san'at darslari, robotika, dasturlash va psixologik
+          qo'llab-quvvatlash ham taqdim etiladi.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

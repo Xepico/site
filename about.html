@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sayt haqida - Xepico</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-light: #ffffff;
+            --bg-dark: #000000;
+            --text-light: #000000;
+            --text-dark: #ffffff;
+            --neon-green: #00ff41;
+            --neon-blue: #00d4ff;
+            --neon-purple: #b400ff;
+            --card-light: #f8f9fa;
+            --card-dark: #0a0a0a;
+            --button-blue: #0084ff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.5s ease, color 0.5s ease;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: var(--neon-purple);
+            border-radius: 50%;
+            animation: float 18s infinite;
+            box-shadow: 0 0 12px var(--neon-purple);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-110px) translateX(55px); }
+            50% { transform: translateY(-220px) translateX(-55px); }
+            75% { transform: translateY(-110px) translateX(110px); }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(135deg, var(--button-blue), var(--neon-purple));
+            border: 2px solid var(--neon-blue);
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+            font-size: 1.1em;
+            box-shadow: 0 0 30px var(--neon-blue), 0 0 60px rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 50px var(--neon-blue), 0 0 100px rgba(0, 212, 255, 0.5);
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 100px 20px;
+            text-align: center;
+            border: 4px solid var(--neon-purple);
+            box-shadow: 0 0 60px var(--neon-purple), inset 0 0 30px rgba(180, 0, 255, 0.2);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        body.dark-mode header {
+            background: linear-gradient(135deg, #1a0033 0%, #2d004d 100%);
+            box-shadow: 0 0 60px var(--neon-purple), inset 0 0 30px rgba(180, 0, 255, 0.1);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(180, 0, 255, 0.2) 0%, transparent 70%);
+            animation: pulse 7s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.4); opacity: 0.9; }
+        }
+
+        h1 {
+            font-size: 4em;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(180, 0, 255, 0.5);
+            animation: glow 2s infinite alternate;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px var(--neon-purple)); }
+            to { filter: drop-shadow(0 0 40px var(--neon-blue)); }
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: white;
+            text-shadow: 0 0 20px rgba(180, 0, 255, 0.8);
+            position: relative;
+            z-index: 2;
+        }
+
+        nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            box-shadow: none; /* removed separator */
+            border-bottom: none;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode nav {
+            background: rgba(10, 10, 10, 0.95);
+            box-shadow: none;
+            border-bottom: none;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--neon-purple);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .nav-logo {
+            color: var(--neon-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        nav a {
+            color: #333;
+            text-decoration: none;
+            padding: 8px 16px;
+            font-size: 0.95em;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-shadow: none;
+        }
+
+        body.dark-mode nav a {
+            color: #e0e0e0;
+        }
+
+        nav a:hover {
+            background: rgba(180, 0, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: none;
+        }
+
+        body.dark-mode nav a:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section {
+            background: var(--card-light);
+            padding: 60px;
+            border-radius: 30px;
+            border: 3px solid var(--neon-purple);
+            box-shadow: 0 0 50px var(--neon-purple), 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 60px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark-mode .section {
+            background: var(--card-dark);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 50px var(--neon-blue), 0 10px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(180, 0, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        body.dark-mode .section::before {
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+        }
+
+        .section:hover::before {
+            opacity: 1;
+        }
+
+        .section:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 70px var(--neon-purple), 0 20px 60px rgba(180, 0, 255, 0.3);
+        }
+
+        body.dark-mode .section:hover {
+            box-shadow: 0 0 70px var(--neon-blue), 0 20px 60px rgba(0, 212, 255, 0.3);
+        }
+
+        .section h2 {
+            color: var(--neon-purple);
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px var(--neon-purple);
+        }
+
+        body.dark-mode .section h2 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        .section p {
+            font-size: 1.2em;
+            line-height: 1.9;
+            margin-bottom: 20px;
+        }
+
+        .founder-section {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .founder-image {
+            flex: 0 0 300px;
+            animation: fadeInLeft 1s ease;
+        }
+
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .founder-image img {
+            width: 100%;
+            border-radius: 25px;
+            border: 4px solid var(--neon-purple);
+            box-shadow: 0 0 60px var(--neon-purple);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .founder-image img {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 60px var(--neon-blue);
+        }
+
+        .founder-image img:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 0 80px var(--neon-purple);
+        }
+
+        .founder-info {
+            flex: 1;
+            min-width: 300px;
+            animation: fadeInRight 1s ease;
+        }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .founder-info h3 {
+            color: var(--neon-purple);
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        body.dark-mode .founder-info h3 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, rgba(180, 0, 255, 0.1), rgba(0, 212, 255, 0.1));
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 30px;
+            border: 2px solid var(--neon-purple);
+        }
+
+        body.dark-mode .contact-info {
+            border-color: var(--neon-blue);
+        }
+
+        .contact-info p {
+            font-size: 1.1em;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .contact-icon {
+            font-size: 1.5em;
+            filter: drop-shadow(0 0 10px var(--neon-purple));
+        }
+
+        .mission-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .mission-card {
+            background: linear-gradient(135deg, rgba(180, 0, 255, 0.1), rgba(102, 126, 234, 0.1));
+            padding: 40px;
+            border-radius: 25px;
+            border: 2px solid var(--neon-purple);
+            box-shadow: 0 0 30px rgba(180, 0, 255, 0.3);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        body.dark-mode .mission-card {
+            background: linear-gradient(135deg, rgba(26, 0, 51, 0.8), rgba(45, 0, 77, 0.8));
+            border-color: var(--neon-blue);
+        }
+
+        .mission-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 0 50px var(--neon-purple);
+        }
+
+        body.dark-mode .mission-card:hover {
+            box-shadow: 0 0 50px var(--neon-blue);
+        }
+
+        .mission-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 15px var(--neon-purple));
+        }
+
+        .mission-card h3 {
+            color: var(--neon-purple);
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        body.dark-mode .mission-card h3 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
+            padding: 60px;
+            border-radius: 30px;
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            box-shadow: 0 0 60px var(--neon-purple);
+        }
+
+        .cta-section h2 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: var(--neon-purple);
+            padding: 20px 50px;
+            border-radius: 50px;
+            border: none;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 30px;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Contact Form Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--card-light);
+            margin: 5% auto;
+            padding: 0;
+            border: 3px solid var(--neon-purple);
+            border-radius: 30px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 0 80px var(--neon-purple);
+            animation: slideIn 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark-mode .modal-content {
+            background: var(--card-dark);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 80px var(--neon-blue);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
+            padding: 30px;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-header h2 {
+            color: white;
+            text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            margin: 0;
+            font-size: 2em;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .close:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--neon-purple);
+            font-size: 1.1em;
+        }
+
+        body.dark-mode .form-group label {
+            color: var(--neon-blue);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--neon-purple);
+            border-radius: 15px;
+            font-size: 1em;
+            background: rgba(180, 0, 255, 0.05);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group textarea,
+        body.dark-mode .form-group select {
+            background: rgba(0, 212, 255, 0.05);
+            border-color: var(--neon-blue);
+            color: var(--text-dark);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--button-blue), #0066cc);
+            border: 2px solid var(--neon-blue);
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px var(--neon-blue);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 50px var(--neon-blue), 0 5px 20px rgba(0, 132, 255, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        footer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 4px solid var(--neon-purple);
+            box-shadow: 0 0 50px var(--neon-purple);
+            margin-top: 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        body.dark-mode footer {
+            background: linear-gradient(135deg, #1a0033 0%, #2d004d 100%);
+            border-top-color: var(--neon-blue);
+            box-shadow: 0 0 50px var(--neon-blue);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--button-blue), #0066cc);
+            border: 2px solid var(--neon-blue);
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 25px var(--neon-blue);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .footer-links a:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 0 40px var(--neon-blue), 0 10px 30px rgba(0, 132, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+
+            .section {
+                padding: 30px;
+            }
+
+            .founder-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <button class="theme-toggle" onclick="toggleTheme()">🌙 Tun/Kun Rejimi</button>
+
+    <nav>
+        <a href="index.html">🏠 Bosh sahifa</a>
+        <a href="xepico-coin.html">💎 Xepico Coin</a>
+        <a href="#" onclick="return false">ℹ️ Sayt haqida</a>
+    </nav>
+
+    <header>
+        <h1>SAYT HAQIDA</h1>
+        <p class="subtitle">ℹ️ Xepico loyihasi va asoschisi haqida ma'lumot</p>
+    </header>
+
+    <div class="main-content">
+        <div class="section">
+            <h2>🌟 Xepico loyihasi haqida</h2>
+            <p>Xepico - bu O'zbekiston yetim bolalarini qo'llab-quvvatlash maqsadida yaratilgan zamonaviy xayriya platformasidir. Bizning asosiy maqsadimiz - har bir yetim bolaning baxtli bolalik va yorug' kelajak yaratishda yordam berishdir.</p>
+            <p>Sayt 2024-yil oxirida tashkil etilgan bo'lib, zamonaviy texnologiyalar va blockchain innovatsiyalaridan foydalangan holda xayriya faoliyatini yanada shaffof va samarali qilishni maqsad qilgan. Biz an'anaviy xayriya usullarini zamonaviy raqamli yechimlar bilan birlashtirdik.</p>
+            
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <div class="mission-icon">🎯</div>
+                    <h3>Bizning missiyamiz</h3>
+                    <p>Har bir yetim bolaga sifatli ta'lim, tibbiy yordam va yashash uchun zarur bo'lgan barcha sharoitlarni yaratish</p>
+                </div>
+                <div class="founder-info">
+                    <h3>Asoschisi va CEO</h3>
+                    <p>Men Xepico loyihasining asoschisi va bosh ijrochiysiman. O'zbekiston yetim bolalariga yordam berish g'oyasi menga yoshligimdan beri yoqardi. Texnologiya sohasida ko'p yillik tajribaga ega bo'lgan holda, men zamonaviy raqamli yechimlarni xayriya faoliyati bilan birlashtirishga qaror qildim.</p>
+                    <p style="margin-top: 20px;">Bizning jamoamiz - bu har xil sohalardan kelgan professionallar: dasturchilar, moliyaviy mutaxassislar, ijtimoiy ishchilar va ko'ngillilar. Biz barchamiz bitta maqsad uchun ishlaymiz - bolalar kelajagini yorug'lashtirish.</p>
+                    
+                    <div class="contact-info">
+                        <h3 style="color: var(--neon-purple); font-size: 1.8em; margin-bottom: 20px;">📞 Bog'lanish</h3>
+                        <p><span class="contact-icon">📱</span> <strong>Telefon:</strong> +998 90 123 45 67</p>
+                        <p><span class="contact-icon">📧</span> <strong>Email:</strong> xepico@hotmail.com</p>
+                        <p><span class="contact-icon">📍</span> <strong>Manzil:</strong> Toshkent, O'zbekiston</p>
+                        <p><span class="contact-icon">💼</span> <strong>Telegram:</strong> @xepico_charity</p>
+                        <p><span class="contact-icon">🌐</span> <strong>Web:</strong> www.xepico.uz</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💡 Nega bu sayt yaratildi?</h2>
+            <p>Xepico loyihasini boshlashimga bir necha muhim sabablar bor edi:</p>
+            
+            <div style="margin-top: 30px; padding: 30px; background: linear-gradient(135deg, rgba(180, 0, 255, 0.05), rgba(0, 212, 255, 0.05)); border-radius: 20px; border-left: 5px solid var(--neon-purple);">
+                <h3 style="color: var(--neon-purple); font-size: 1.8em; margin-bottom: 20px;">🎯 Asosiy sabablar:</h3>
+                
+                <p><strong>1. Shaffoflik muammosi:</strong> Ko'pgina xayriya tashkilotlarida pul mablag'larining qayerga sarflanayotgani noaniq bo'ladi. Biz blockchain texnologiyasi orqali har bir tranzaksiyani ochiq va tekshiriladigan qildik.</p>
+                
+                <p style="margin-top: 20px;"><strong>2. Texnologiya kuchi:</strong> Zamonaviy texnologiyalar orqali xayriyani yanada oson va qulayroq qilish mumkin. Kriptovalyuta orqali dunyo bo'ylab istalgan joydan yordam ko'rsatish imkoniyati yaratildi.</p>
+                
+                <p style="margin-top: 20px;"><strong>3. Yoshlar qo'llab-quvvatlashi:</strong> Yosh avlod raqamli platformalarda faol. Biz ularga qulay bo'lgan usulda xayriya qilish imkoniyatini taqdim etdik.</p>
+                
+                <p style="margin-top: 20px;"><strong>4. Davomiy yordam:</strong> Bir martalik yordam emas, balki uzoq muddatli qo'llab-quvvatlash tizimini yaratdik. Xepico Coin egalari doimiy ravishda yordamda ishtirok etadilar.</p>
+                
+                <p style="margin-top: 20px;"><strong>5. Bolalarning haqiqiy ehtiyojlari:</strong> O'zbekistonda minglab yetim bolalar mavjud va ular to'laqonli hayot kechirish uchun qo'llab-quvvatlashga muhtoj. Biz bu muammoni hal qilishga hissa qo'shamiz.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📈 Erishilgan natijalar</h2>
+            <div class="mission-grid">
+                <div class="mission-card">
+                    <div class="mission-icon">👥</div>
+                    <h3>10,000+</h3>
+                    <p>Ro'yxatdan o'tgan foydalanuvchilar va qo'llab-quvvatlovchilar</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">🎓</div>
+                    <h3>3,000+</h3>
+                    <p>Ta'lim yordami olgan bolalar</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">💰</div>
+                    <h3>$500,000+</h3>
+                    <p>Yig'ilgan xayriya mablag'lari</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">🏫</div>
+                    <h3>50+</h3>
+                    <p>Qo'llab-quvvatlangan ta'lim muassasalari</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">🏥</div>
+                    <h3>5,000+</h3>
+                    <p>Tibbiy yordam ko'rsatilgan bolalar</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">🤝</div>
+                    <h3>500+</h3>
+                    <p>Faol ko'ngillilar</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Kelajak rejalari</h2>
+            <p>Biz Xepico loyihasini kelajakda yanada rivojlantirishni rejalashtiryapmiz:</p>
+            
+            <div style="margin-top: 30px;">
+                <p style="padding: 20px; background: linear-gradient(135deg, rgba(0, 255, 65, 0.1), rgba(0, 212, 255, 0.1)); border-radius: 15px; margin-bottom: 15px; border-left: 4px solid var(--neon-green);"><strong>📱 Mobil ilova:</strong> iOS va Android uchun mobil ilova yaratish, bu orqali foydalanuvchilar har qanday joydan xayriya qilishlari mumkin bo'ladi.</p>
+                
+                <p style="padding: 20px; background: linear-gradient(135deg, rgba(0, 132, 255, 0.1), rgba(180, 0, 255, 0.1)); border-radius: 15px; margin-bottom: 15px; border-left: 4px solid var(--neon-blue);"><strong>🌍 Xalqaro kengayish:</strong> Loyihani O'zbekistondan tashqarida ham targ'ib qilish va xalqaro investorlarni jalb qilish.</p>
+                
+                <p style="padding: 20px; background: linear-gradient(135deg, rgba(180, 0, 255, 0.1), rgba(255, 0, 255, 0.1)); border-radius: 15px; margin-bottom: 15px; border-left: 4px solid var(--neon-purple);"><strong>🏫 Ta'lim markazlari:</strong> Maxsus ta'lim markazlarini qurish va jihozlash, bu yerda bolalar zamonaviy fan va texnologiyani o'rganishlari mumkin.</p>
+                
+                <p style="padding: 20px; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 170, 0, 0.1)); border-radius: 15px; margin-bottom: 15px; border-left: 4px solid #ffd700;"><strong>💎 Xepico Coin rasmiy chiqishi:</strong> Kriptovalyutani asosiy birzhalarda listing qilish va investorlar uchun ochish.</p>
+                
+                <p style="padding: 20px; background: linear-gradient(135deg, rgba(0, 255, 65, 0.1), rgba(102, 187, 106, 0.1)); border-radius: 15px; border-left: 4px solid var(--neon-green);"><strong>🤝 Hamkorlik:</strong> Davlat tashkilotlari va xalqaro xayriya fondlari bilan hamkorlik o'rnatish.</p>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2>🤝 Bizga qo'shiling!</h2>
+            <p style="font-size: 1.3em; line-height: 1.8;">Siz ham Xepico loyihasining bir qismi bo'lishingiz mumkin. Ko'ngilli, donor yoki hamkor sifatida bizga qo'shiling va birgalikda bolalarning kelajagini yorug'lashtirish uchun ishlaylik!</p>
+            <a href="#" onclick="openContactForm(); return false;" class="cta-button">💚 Hoziroq qo'shiling</a>
+        </div>
+    </div>
+
+    <!-- Contact Form Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeContactForm()">&times;</span>
+                <h2>📧 Bizga qo'shiling!</h2>
+                <p style="margin-top: 10px; font-size: 1.1em;">Ma'lumotlaringizni qoldiring, biz siz bilan bog'lanamiz</p>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm" onsubmit="sendEmail(event)">
+                    <div class="form-group">
+                        <label for="fullName">👤 To'liq ismingiz *</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="Ismingizni kiriting">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">📧 Email manzilingiz *</label>
+                        <input type="email" id="email" name="email" required placeholder="example@gmail.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">📱 Telefon raqamingiz *</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="+998 90 123 45 67">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="interest">💼 Qanday ko'rinishda yordam bermoqchisiz? *</label>
+                        <select id="interest" name="interest" required>
+                            <option value="">Tanlang...</option>
+                            <option value="volunteer">🤝 Ko'ngilli bo'lish</option>
+                            <option value="donor">💰 Moliyaviy yordam</option>
+                            <option value="partner">🤝 Hamkorlik</option>
+                            <option value="other">📋 Boshqa</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">💬 Qo'shimcha ma'lumot</label>
+                        <textarea id="message" name="message" placeholder="Sizning fikrlaringiz yoki savollaringiz..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">📨 Yuborish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">🏠 Bosh sahifa</a>
+            <a href="xepico-coin.html">💎 Xepico Coin</a>
+            <a href="#" onclick="alert('☎️ Telefon: +998 90 123 45 67\n📧 Email: info@xepico.uz')">📞 Bog'lanish</a>
+        </div>
+        
+        <div style="display: flex; justify-content: center; gap: 30px; margin-top: 30px; flex-wrap: wrap;">
+            <a href="https://t.me/xepico_charity" target="_blank" style="color: white; font-size: 1.3em; text-decoration: none; padding: 15px 30px; border: 3px solid var(--neon-blue); border-radius: 50px; box-shadow: 0 0 25px var(--neon-blue); background: rgba(0, 132, 255, 0.2); font-weight: bold; transition: all 0.3s ease;">📱 Telegram</a>
+            <a href="https://youtube.com/@xepico" target="_blank" style="color: white; font-size: 1.3em; text-decoration: none; padding: 15px 30px; border: 3px solid var(--neon-blue); border-radius: 50px; box-shadow: 0 0 25px var(--neon-blue); background: rgba(0, 132, 255, 0.2); font-weight: bold; transition: all 0.3s ease;">▶️ YouTube</a>
+        </div>
+        
+        <p style="color: white; margin-top: 50px; font-size: 1.2em; text-shadow: 0 0 15px var(--neon-purple);">© 2025 Xepico. Barcha huquqlar himoyalangan.</p>
+        <p style="color: var(--neon-purple); margin-top: 15px; font-size: 1.1em; text-shadow: 0 0 20px var(--neon-purple);">💜 Birgalikda kuchli, birgalikda yorug' kelajak!</p>
+    </footer>
+
+    <script>
+        // Create animated particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 35;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 18 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 13) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Load saved theme preference
+        window.addEventListener('load', () => {
+            // Check system preference
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.add('dark-mode');
+            }
+        });
+
+        // Contact Form Functions
+        function openContactForm() {
+            document.getElementById('contactModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeContactForm() {
+            document.getElementById('contactModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('contactModal');
+            if (event.target == modal) {
+                closeContactForm();
+            }
+        }
+
+        // Send Email Function
+        function sendEmail(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const fullName = form.fullName.value;
+            const email = form.email.value;
+            const phone = form.phone.value;
+            const interest = form.interest.value;
+            const message = form.message.value;
+            
+            // Get interest text
+            const interestText = {
+                'volunteer': '🤝 Ko\'ngilli bo\'lish',
+                'donor': '💰 Moliyaviy yordam',
+                'partner': '🤝 Hamkorlik',
+                'other': '📋 Boshqa'
+            }[interest] || interest;
+            
+            // Create email body
+            const subject = encodeURIComponent('Yangi murojaat - Xepico');
+            const body = encodeURIComponent(
+                `Assalomu alaykum!\n\n` +
+                `Xepico loyihasiga qo'shilish uchun yangi murojaat:\n\n` +
+                `👤 Ism: ${fullName}\n` +
+                `📧 Email: ${email}\n` +
+                `📱 Telefon: ${phone}\n` +
+                `💼 Qiziqish: ${interestText}\n\n` +
+                `💬 Xabar:\n${message || 'Yo\'q'}\n\n` +
+                `---\n` +
+                `Ushbu xabar Xepico.uz saytidan yuborildi.`
+            );
+            
+            // Open email client
+            window.location.href = `mailto:xepico@hotmail.com?subject=${subject}&body=${body}`;
+            
+            // Show success message
+            alert('✅ Email dasturingiz ochildi!\n\nIltimos, xabarni yuboring. Agar email ochilmasa, quyidagi manzilga qo\'lda xat yozing:\nxepico@hotmail.com');
+            
+            // Reset form and close modal
+            form.reset();
+            setTimeout(() => {
+                closeContactForm();
+            }, 1000);
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href !== '#' && href !== '') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+
+        // Add scroll animation for sections
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
+                <div class="mission-card">
+                    <div class="mission-icon">👁️</div>
+                    <h3>Shaffoflik</h3>
+                    <p>Har bir so'm va tranzaksiya to'liq shaffof tarzda namoyon bo'ladi. Donorlar o'z yordamlarining ta'sirini ko'rishlari mumkin</p>
+                </div>
+                <div class="mission-card">
+                    <div class="mission-icon">🚀</div>
+                    <h3>Innovatsiya</h3>
+                    <p>Blockchain texnologiyasi va kriptovalyuta orqali xayriyani yanada qulay va xavfsiz qilamiz</p>
+                </div>
+            </div>
+        </div>
+
+        
